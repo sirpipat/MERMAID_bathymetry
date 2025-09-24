@@ -77,15 +77,17 @@ else
     have_stats_input = true;
 end
 
-for pp = 1:6
-    ii_cases_low_cc = [1 2 3 4 5] + 5 * (pp - 1);%[1 2 14 9 10];
-    ii_cases_high_cc = [1 2 3 4 5] + 5 * (pp - 1);%[1 2 8 11 14];
+for pp = 1:1
+    ii_cases_low_cc = [1 2 13 20 28] + 0 *5 * (pp - 1);%[1 2 14 9 10];
+    ii_cases_high_cc = [1 2 12 5 29] + 0 * 5 * (pp - 1);%[1 2 8 11 14];
     ii_cases_master = [ii_cases_low_cc; ii_cases_high_cc];
     
     min_snr = 15;
     min_gcarc = 20;
-    wh_valid = and(obs_struct.snr(:,2) > min_snr, ...
-        obs_struct.metadata.GCARC > min_gcarc);
+    min_depth = 33;
+    wh_valid = and(and(obs_struct.snr(:,2) > min_snr, ...
+        obs_struct.metadata.GCARC > min_gcarc), ...
+        obs_struct.metadata.EVDP > min_depth);
     ic_list = indeks((1:length(obs_struct.CCmaxs(:,2)))', wh_valid);
     for kk = 1:2
         [~, ic] = sort(obs_struct.CCmaxs(wh_valid,2), keywords{kk});
@@ -115,7 +117,7 @@ for pp = 1:6
             stats.std(ii_stats, 1) = std(zz(41, :));
 
             if ~strcmpi(bath, 'GEBCO')
-                ddir = fullfile(getenv('REMOTE3D'), '20250714_MERMAID_INSTASEIS', ...
+                ddir = fullfile(getenv('REMOTE3D'), '20250717_MERMAID_INSTASEIS', ...
                     sprintf('LAYERED_OC_MERMAID_%s_%02d', keyfolders{kk}, ...
                     ii_cases(ii)));
                 itfs = loadinterfacefiles3d(fullfile(ddir, 'DATA', ...
@@ -160,15 +162,15 @@ for pp = 1:6
             subtitle(' ', 'FontSize', 2)
         
             % add mean and std info the corners
-            ax1_mean = axes('Position', [0.038+xposshift(ii) 0.68 0.07 0.025]);
-            axeslabel(ax1_mean, 0.5, 0.5, sprintf('\\mu = %.3f km', ...
+            ax1_mean = axes('Position', [0.038+xposshift(ii) 0.68 0.08 0.025]);
+            axeslabel(ax1_mean, 0.5, 0.5, sprintf('med  =  %.3f km', ...
                 round(mean_zz)/1000), 'FontSize', 8, ...
                 'HorizontalAlignment', 'center');
             nolabels(ax1_mean, 3)
             set(ax1_mean, 'Box', 'on', 'XTick', [], 'YTick', [])
     
-            ax1_std = axes('Position', [0.118+xposshift(ii) 0.68 0.07 0.025]);
-            axeslabel(ax1_std, 0.5, 0.5, sprintf('\\sigma = %d m', ...
+            ax1_std = axes('Position', [0.128+xposshift(ii) 0.68 0.06 0.025]);
+            axeslabel(ax1_std, 0.5, 0.5, sprintf('std  =  %d m', ...
                 round(std_zz)), 'FontSize', 8, ...
                 'HorizontalAlignment', 'center');
             nolabels(ax1_std, 3)
@@ -352,7 +354,7 @@ for pp = 1:6
             seis_sf = bandpass(detrend(seis_s), fs_s, fc(1), fc(2), 4, ...
                 2, 'butter', 'linear');
     
-            ddir = fullfile(getenv('REMOTE3D'), '20250714_MERMAID_INSTASEIS', ...
+            ddir = fullfile(getenv('REMOTE3D'), '20250717_MERMAID_INSTASEIS', ...
                 sprintf('LAYERED_OC_MERMAID_%s_%02d', keyfolders{kk}, ...
                 ii_cases(ii)));
     
@@ -528,6 +530,14 @@ for pp = 1:6
                     'YLim', [-4.5 4])
                 title(sprintf('2D-3D CC: %s', 'n/a'), 'FontWeight', 'normal')
             end
+
+            % Highlight [-5 5] window
+            [xbox, ybox] = boxcorner([-5 5], ax3.YLim);
+            pgon = polyshape(xbox, ybox);
+            bx = plot(ax3, pgon, 'FaceColor', [1 0.9 0.4], ...
+                'FaceAlpha', 0.4, 'EdgeColor', 'none', 'EdgeAlpha', 1, ...
+                'HandleVisibility', 'off');
+            uistack(bx, 'bottom');
     
             % Bandpass corner frequency information
             ax3_fc = axes('Position', [0.128+xposshift(ii) 0.14 0.06 0.025]);
