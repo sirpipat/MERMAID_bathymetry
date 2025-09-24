@@ -1,4 +1,4 @@
-function update_fkspecfem3d_runs_routine(obs_struct, synmasterdir, specmasterdir, n, min_snr, min_gcarc)
+function update_fkspecfem3d_runs_routine(obs_struct, synmasterdir, specmasterdir, n, min_snr, min_gcarc, min_depth)
 % UPDATE_FKSPECFEM3D_RUNS_ROUTINE(obs_struct, synmasterdir, specmasterdir, n, min_snr, min_gcarc)
 %
 % Updates the FK-SPECFEM3D runs: added ocean bottom bathymetry, adjust the
@@ -25,6 +25,7 @@ function update_fkspecfem3d_runs_routine(obs_struct, synmasterdir, specmasterdir
 % n                 number of runs for HIGHCC or LOWCC  [default: 15]
 % min_snr           Signal-to-noise ratio cut-off       [default: 0]
 % min_gcarc         Epicentral distance cut-off         [default: 0]
+% min_depth         Minimum event depth                 [default: 0]
 % 
 % SEE ALSO:
 % ADDOCEANBOTTOM, STFMAKER
@@ -32,13 +33,15 @@ function update_fkspecfem3d_runs_routine(obs_struct, synmasterdir, specmasterdir
 % Last modified by sirawich-at-princeton.edu, 07/16/2025
 
 defval('specmasterdir', ...
-    fullfile(getenv('REMOTE3D'), '20250714_MERMAID_INSTASEIS'))
+    fullfile(getenv('REMOTE3D'), '20250717_MERMAID_INSTASEIS'))
 defval('n', 15)
 defval('min_snr', 0)
 defval('min_gcarc', 0)
+defval('min_depth', 0)
 
-wh_valid = and(obs_struct.snr(:,2) > min_snr, ...
-    obs_struct.metadata.GCARC > min_gcarc);
+wh_valid = and(and(obs_struct.snr(:,2) > min_snr, ...
+    obs_struct.metadata.GCARC > min_gcarc), ...
+    obs_struct.metadata.EVDP > min_depth);
 ic_list = indeks((1:length(obs_struct.CCmaxs(:,2)))', wh_valid);
 
 % sort the observations by decreasing correlation coefficient
