@@ -49,7 +49,7 @@ function specfem3d_input_setup(ddir, depth, topo, inject, solver, with2d)
 % SEE ALSO:
 % SPECFEM3D_INPUT_SETUP_FLAT, SIMULOSL
 %
-% Last modified by sirawich-at-princeton.edu: 04/21/2025
+% Last modified by sirawich-at-princeton.edu: 03/08/2026
 
 % default parameters
 defstruct('topo', 'type', 'flat')
@@ -77,45 +77,43 @@ elseif strcmp(topo.type, 'randomfield')
     defstruct('topo', 'nu', 0.5)
     defstruct('topo', 'rho', 1000);
     defstruct('topo', 'dydx', [500 500])
-    defstruct('topo', 'NX', 57)
-    defstruct('topo', 'NY', 57)
+    defstruct('topo', 'NyNx', [57 57])
     defstruct('topo', 'blurs', Inf)
     defstruct('topo', 'taper', 1)
     defstruct('topo', 'shanning', [0.15 0.15])
     
     % generate a random field
     p.dydx = topo.dydx;
-    p.NyNx = [topo.NY-16 topo.NX-16];
+    p.NyNx = topo.NyNx - [16 16];
     p.blurs = topo.blurs;
     p.taper = topo.taper;
     Hx = simulosl([topo.s2 topo.nu topo.rho], p);
     Hxy = v2s(Hx, p);
     
     % apply hann filter
-    wY = shanning(topo.NY-16, topo.shanning(1));
-    wX = shanning(topo.NX-16, topo.shanning(2));
+    wY = shanning(topo.NyNx(1)-16, topo.shanning(1));
+    wX = shanning(topo.NyNx(2)-16, topo.shanning(2));
     Hxy = (wY * wX') .* Hxy;
     
-    NXI = topo.NX;
-    NETA = topo.NY;
+    NXI = topo.NyNx(2);
+    NETA = topo.NyNx(1);
     
     bath = ones(NETA, NXI) * topo.depth;
     bath(9:NETA-8, 9:NXI-8) = bath(9:NETA-8, 9:NXI-8) + Hxy;
     
 elseif strcmp(topo.type, 'bathymetry')
     defstruct('topo', 'dydx', [500 500])
-    defstruct('topo', 'NX', 57)
-    defstruct('topo', 'NY', 57)
+    defstruct('topo', 'NyNx', [57 57])
     defstruct('topo', 'shanning', [0.15 0.15])
     defstruct('topo', 'lon', -168.38)
     defstruct('topo', 'lat', -12.00)
     defstruct('topo', 'baz', 266.2356)
     
-    NXI = topo.NX;
-    NETA = topo.NY;
+    NXI = topo.NyNx(2);
+    NETA = topo.NyNx(1);
     
     [~, ~, zz] = bathymetryprofile2d(topo.dydx .* ...
-        [topo.NY-1 topo.NX-1], [topo.NY topo.NX], ...
+        [topo.NyNx(1)-1 topo.NyNx(2)-1], [topo.NyNx(1) topo.NyNx(2)], ...
         [topo.lon topo.lat], topo.baz);
     
     % rotate counter clockwise 90 degrees
@@ -127,8 +125,8 @@ elseif strcmp(topo.type, 'bathymetry')
     topo.depth = mean(zz, 'all');
     
     % apply hann filter
-    wY = [zeros(4,1); shanning(topo.NY-8, topo.shanning(1)); zeros(4,1)];
-    wX = [zeros(4,1); shanning(topo.NX-8, topo.shanning(2)); zeros(4,1)];
+    wY = [zeros(4,1); shanning(topo.NyNx(1)-8, topo.shanning(1)); zeros(4,1)];
+    wX = [zeros(4,1); shanning(topo.NyNx(2)-8, topo.shanning(2)); zeros(4,1)];
     bath = (wY * wX') .* (zz - topo.depth) + topo.depth;
     
 % for direction test purpose for now
@@ -136,12 +134,11 @@ elseif strcmp(topo.type, 'slope')
     defstruct('topo', 'depth', -5000)
     defstruct('topo', 'slope', 0.1)
     defstruct('topo', 'dydx', [500 500])
-    defstruct('topo', 'NX', 57)
-    defstruct('topo', 'NY', 57)
+    defstruct('topo', 'NyNx', [57 57])
     defstruct('topo', 'shanning', [0.15 0.15])
     
-    NXI = topo.NX;
-    NETA = topo.NY;
+    NXI = topo.NyNx(2);
+    NETA = topo.NyNx(1);
     
     % slope 
     Hxy = (1:NETA-16)' * topo.slope * topo.dydx(1) + (1:NXI-16) * 0;
