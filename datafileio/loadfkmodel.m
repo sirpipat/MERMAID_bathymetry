@@ -16,7 +16,7 @@ function fkmodel = loadfkmodel(fname)
 % SEE ALSO:
 % MAKEFKMODEL, WRITEFKMODEL
 %
-% Last modified by sirawich-at-princeton.edu, 02/26/2025
+% Last modified by sirawich-at-princeton.edu, 03/09/2026
 
 % set default values
 fkmodel = makefkmodel;
@@ -75,7 +75,7 @@ while true
             fkmodel.fmax = str2double(words{2});
         case 'FREQUENCY_SAMPLING'
             fkmodel.fs = str2double(words{2});
-        case 'TIME_WINDOE'
+        case 'TIME_WINDOW'
             fkmodel.twindow = str2double(words{2});
         case 'AMPLITUDE'
             fkmodel.amplitude = str2double(words{2});
