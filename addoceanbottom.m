@@ -15,7 +15,7 @@ function addoceanbottom(ddir, topo, z0, taper)
 %               default.
 % taper         whether to taper to z0 elevation or not
 %
-% Last modified by sirawich-at-princeton.edu, 06/25/2025
+% Last modified by sirawich-at-princeton.edu, 03/09/2026
 
 fkmodel = loadfkmodel(fullfile(ddir, 'DATA', 'FKMODEL'));
 
@@ -96,7 +96,7 @@ writeinterfacefiles3d(itfs, layers, fullfile(ddir, 'DATA', ...
 % fix the elevation of the station
 [~, name, network, x, y, z] = readstations3d(fullfile(ddir, 'DATA', ...
     'STATIONS'));
-z(1) = itfs{end-1}.Z(41,41);
+z(1) = topo(floor((size(topo,1)+1)/2), floor((size(topo,2)+1)/2));
 stations = struct('name', {name}, 'network', {network}, 'lat', y, ...
     'lon', x, 'elev', z, 'z', z);
 writestations3d(stations, fullfile(ddir, 'DATA', 'STATIONS'))
