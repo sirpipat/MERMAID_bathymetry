@@ -6,6 +6,7 @@ function varargout = readcrust1(ddir, varname, layer, lons, lats)
 %
 % INPUT:
 % ddir              name of the CRUST1.0 directory
+%                   [Default: $IFILES/EARTHMODELS/PHYSICAL/crust1.0]
 % varname           name of the variable names
 %   "rho"               density
 %   "vp"                P-wave speed
@@ -18,15 +19,15 @@ function varargout = readcrust1(ddir, varname, layer, lons, lats)
 %   "lslayers"          list layers
 % layer             layer/boundary number
 % lons              longitude(s) which can be either
+%   - []                entire Earth (Default)
 %   - single value      single point
 %   - two values        [lonmin lonmax] with 1 degree spacing
 %   - >2 values         list of longitudes of the grid
-%   - []                entire Earth
 % lats              latitude(s) which can be either
+%   - []                entire earth (Default)
 %   - single value      single point
 %   - two values        [latmin latmax] with 1 degree spacing
 %   - >2 values         list of latitudes of the grid
-%   - []                entire earth
 %
 % OUTPUT:
 % val               values of the variable at the lon/lat grid
@@ -49,6 +50,7 @@ LATLIM    = [-90 90];
 LONS      = -179.5:179.5;
 LATS      =  -89.5:89.5;
 
+% list of default input values
 defval('ddir', fullfile(getenv('IFILES'), 'EARTHMODELS', 'PHYSICAL', 'crust1.0'))
 defval('lons', [])
 defval('lats', [])
