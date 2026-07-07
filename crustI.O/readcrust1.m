@@ -37,9 +37,9 @@ function varargout = readcrust1(ddir, varname, layer, lons, lats)
 % readcrust1([], 'bnds', 3, [160 260], [-40 10])
 % readcrust1('list')
 % readcrust1([], 'lslayers')
-% readcryst1([], 'lsbnds')
+% readcrust1([], 'lsbnds')
 %
-% Last modified by sirawich@spipatprathanporn@ucsd.edu, 06/24/2026
+% Last modified by spipatprathanporn@ucsd.edu, 07/06/2026
 
 % list of constants
 NUMLAYERS = 9;
