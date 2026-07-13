@@ -6,6 +6,9 @@ function writeinterfacefiles3d(itfs, layers, fname)
 % directory as the interface file as specified by FNAME variable. The
 % directories of ITFS{ii}.FILE are not used here.
 %
+% Read https://specfem3d.readthedocs.io/en/latest/03_mesh_generation on how
+% the interfaces are stored in files
+%
 % DISCLAIMER: This is not the official way to read/write an interface 
 % file. I just go through comments and parameters in an instant of 
 % interface file and read/write accordingly.
@@ -20,7 +23,7 @@ function writeinterfacefiles3d(itfs, layers, fname)
 %       SPACING_XI                  spacing in x-direction
 %       SPACING_ETA                 spacing in y-direction
 %       FILE                        elevation file name
-%       Z                           elevation grid at (X,Y) or (LON,LAT)
+%       Z                           elevation grid at (Y,X) or (LAT,LON)
 % layers        number of vertical spectral elements for each layer
 % fname         full-path name of the interface file you want to create
 %               Default: [] -- everything is written to standard output
@@ -28,7 +31,7 @@ function writeinterfacefiles3d(itfs, layers, fname)
 % SEE ALSO:
 % LOADINTERFACEFILES3D
 %
-% Last modified by sirawich-at-princeton.edu, 09/19/2024
+% Last modified by sirawich-at-princeton.edu, 07/13/2026
 
 defval('fname', [])
 
@@ -75,8 +78,13 @@ for ii = 1:length(itfs)
     else
         fid_ii = fopen(strcat(ddir, removepath(itfs{ii}.FILE)), 'w');
     end
-    fprintf(fid_ii, '%g\n', reshape(itfs{ii}.Z', ...
-        itfs{ii}.NXI * itfs{ii}.NETA, 1));
+    if itfs{ii}.SUPPRESS_UTM_PROJECTION
+        fprintf(fid_ii, '%g\n', reshape(itfs{ii}.Z, ...
+            itfs{ii}.NXI * itfs{ii}.NETA, 1));
+    else
+        fprintf(fid_ii, '%g\n', reshape(itfs{ii}.Z', ...
+            itfs{ii}.NXI * itfs{ii}.NETA, 1));
+    end
     if fid_ii >= 3
         fclose(fid_ii);
     end
