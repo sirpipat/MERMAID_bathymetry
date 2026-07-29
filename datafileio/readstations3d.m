@@ -1,7 +1,9 @@
 function [n, name, network, x, y, z] = readstations3d(fname)
 % [n, name, network, x, y, z] = READSTATIONS3D(fname)
 % 
-% Reads a STATION file for SPECFEM3D simulation.
+% Reads a STATION file for SPECFEM3D simulation and returns as vectors of
+% column names. Consider using LOADSTATIONS3D if you want a vector of
+% struct output.
 %
 % INPUT
 % fname         full filename of a STATION file
@@ -10,13 +12,14 @@ function [n, name, network, x, y, z] = readstations3d(fname)
 % n             the number of stations
 % name          station names
 % network       station network names
-% x             x-coordinates
+% x             x-coordinates or longitude
+% y             y-coordinates or latitude
 % z             z-coordinates
 %
 % SEE ALSO:
-% WRITESTATIONS3D, READ_STATION
+% LOADSTATIONS3D, WRITESTATIONS3D, MAKESTATIONS3D, READ_STATIONS
 %
-% Last modified by Sirawich Pipatprathanporn, 03/26/2025
+% Last modified by Sirawich Pipatprathanporn, 07/29/2026
 
 % read the station file as a table
 opts = detectImportOptions(fname, 'FileType', 'text');
@@ -33,10 +36,12 @@ if isempty(T)
         'Var6', str2double(words{6}));
 end
 
+% Format
+% name     network   y/lat    x/lon   elev    z  
 name = T.Var1;
 network = T.Var2;
-x = T.Var3;
-y = T.Var4;
+x = T.Var4;
+y = T.Var3;
 z = T.Var6;
 n = size(T, 1);
 end
