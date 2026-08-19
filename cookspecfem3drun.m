@@ -1,11 +1,13 @@
 function cookspecfem3drun(ddir, model, boxsize, elemsize, stftype, freq, theta, fs, nprocs, bath, s2, nu, rho, it)
-% COOKSPECFEM3DRUN(ddir, model, boxsize, elemsize, stftype, freq, theta, fs, nprocs, bath, s2, nu, rho, it)
-% Make a FK-SPECFEM3D run from stockfiles.
+% COOKSPECFEM3DRUN(ddir, model, boxsize, elemsize, stftype, freq, ...
+%     theta, fs, nprocs, bath, s2, nu, rho, it)
+%
+% Makes a FK-SPECFEM3D run from stockfiles.
 %
 % SEE ALSO:
 % MAKESTOCKFILE3D
 %
-% Last modified by sirawich-at-princeton.edu, 07/07/2025
+% Last modified by sirawich-at-princeton.edu, 08/19/2026
 
 if strcmp(ddir, 'options')
     % print out options
@@ -209,7 +211,7 @@ end
 source = fullfile(stadir, 'STATIONS');
 [n, name, network, x, y, z] = readstations3d(source);
 if strcmp(bath, 'RANDOM')
-    z(1) = itfs{length(layers)-1}.Z(ceil(NXI/2), ceil(NETA/2));
+    z(1) = itfs{length(layers)-1}.Z(ceil(NETA/2), ceil(NXI/2));
 end
 stations.name = name;
 stations.network = network;
