@@ -16,7 +16,7 @@ function fkmodel = loadfkmodel(fname)
 % SEE ALSO:
 % MAKEFKMODEL, WRITEFKMODEL
 %
-% Last modified by sirawich-at-princeton.edu, 03/09/2026
+% Last modified by sirawich-at-princeton.edu, 08/19/2026
 
 % set default values
 fkmodel = makefkmodel;
@@ -59,7 +59,7 @@ while true
             end
         case 'INCIDENT_WAVE'
             fkmodel.wave = words{2};
-        case 'BACK_AZIMITH'
+        case 'BACK_AZIMUTH'
             fkmodel.baz = str2double(words{2});
         case 'AZIMUTH'
             fkmodel.baz = mod(str2double(words{2}) + 180, 360);
