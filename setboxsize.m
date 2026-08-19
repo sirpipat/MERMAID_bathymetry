@@ -17,7 +17,7 @@ function varargout = setboxsize(ddir, boxsize, elemsize)
 % SEE ALSO:
 % SPECFEM3D_INPUT_SETUP, SPECFEM3D_INPUT_SETUP_FLAT
 %
-% Last modified by sirawich-at-princeton.edu, 03/09/2026
+% Last modified by sirawich-at-princeton.edu, 08/19/2026
 
 % what to change
 % v meshparams.LATITUDE_MIN/MAX
@@ -56,10 +56,10 @@ fkmodel = loadfkmodel(fkmodelfile);
 %% check the input conditions
 % elemsize
 if elemsize(1) <= 0
-    elemsize(1) = (meshparams.LONGITUDE_MAX - meshparams.LONGITUDE_MIN) / meshparams.NEX_ETA;
+    elemsize(1) = (meshparams.LONGITUDE_MAX - meshparams.LONGITUDE_MIN) / meshparams.NEX_XI;
 end
 if elemsize(2) <= 0
-    elemsize(2) = (meshparams.LATITUDE_MAX - meshparams.LATITUDE_MIN) / meshparams.NEX_XI;
+    elemsize(2) = (meshparams.LATITUDE_MAX - meshparams.LATITUDE_MIN) / meshparams.NEX_ETA;
 end
 if elemsize(3) <= 0
     elemsize(3) = (meshparams.DEPTH_BLOCK_KM * 1000) / sum(layers);
@@ -68,27 +68,27 @@ end
 % Round the number of elements to be 8 times the multiple of the number of 
 % processors and adjust the element size accordingly.
 % See https://specfem3d.readthedocs.io/en/latest/03_mesh_generation
-nex_eta_exact = boxsize(1) / elemsize(1);
-nex_eta_round = round(nex_eta_exact / (8 * meshparams.NPROC_ETA)) * ...
-    (8 * meshparams.NPROC_ETA);
-elemsize(1) = boxsize(1) / nex_eta_round;
-
-nex_xi_exact = boxsize(2) / elemsize(2);
+nex_xi_exact = boxsize(1) / elemsize(1);
 nex_xi_round = round(nex_xi_exact / (8 * meshparams.NPROC_XI)) * ...
     (8 * meshparams.NPROC_XI);
-elemsize(2) = boxsize(2) / nex_xi_round;
+elemsize(1) = boxsize(1) / nex_xi_round;
+
+nex_eta_exact = boxsize(2) / elemsize(2);
+nex_eta_round = round(nex_eta_exact / (8 * meshparams.NPROC_ETA)) * ...
+    (8 * meshparams.NPROC_ETA);
+elemsize(2) = boxsize(2) / nex_eta_round;
 
 nez_exact = boxsize(3) / elemsize(3);
 nez_round = round(nez_exact);
 elemsize(3) = boxsize(3) / nez_round;
 
-numelems = [nex_eta_round nex_xi_round nez_round];
+numelems = [nex_xi_round nex_eta_round nez_round];
 
 fprintf('The element size is adjusted to %.2f x %.2f x %.2f m.\n', ...
     elemsize(1), elemsize(2), elemsize(3));
-str = sprintf('%d', nex_eta_round * nex_xi_round * nez_round);
+str = sprintf('%d', nex_xi_round * nex_eta_round * nez_round);
 fprintf('The number of elements is %d x %d x %d = %s elements.\n', ...
-    nex_eta_round, nex_xi_round, nez_round, ...
+    nex_xi_round, nex_eta_round, nez_round, ...
     insert(str, ',', flip(length(str)-2:-3:2)));
 
 % fkmodel layers ztop
@@ -145,8 +145,8 @@ end
 for ii = 1:length(itfs)
     itfs{ii}.LAT_MIN = meshparams.LATITUDE_MIN;
     itfs{ii}.LON_MIN = meshparams.LONGITUDE_MIN;
-    itfs{ii}.SPACING_XI = boxsize(2) / (itfs{ii}.NXI - 1);
-    itfs{ii}.SPACING_ETA = boxsize(1) / (itfs{ii}.NETA - 1);
+    itfs{ii}.SPACING_XI = boxsize(1) / (itfs{ii}.NXI - 1);
+    itfs{ii}.SPACING_ETA = boxsize(2) / (itfs{ii}.NETA - 1);
 end
 
 % move the origin wavefront
