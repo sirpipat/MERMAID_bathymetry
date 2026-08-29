@@ -10,7 +10,7 @@ function drawmesh3d(ddir, direction, ii_plot, scaling)
 % SEE ALSO:
 % DRAWBACKGROUND (for SPECFEM2D simulation)
 %
-% Last modified by spipatprathanporn@ucsd.edu, 08/19/2026
+% Last modified by spipatprathanporn@ucsd.edu, 08/30/2026
 
 defval('direction', 'longitudinal')
 defval('ii_plot', [])
@@ -64,7 +64,7 @@ end
 
 figure
 clf
-set(gcf, 'Units', 'inches', 'Position', [0 1 9 5.5])
+set(gcf, 'Units', 'inches', 'Position', [0 1 9 5])
 subplot('Position', [0.08 0.08 0.39 0.84])
 imagesc([meshparams.LONGITUDE_MIN meshparams.LONGITUDE_MAX] / scaling, ...
     [meshparams.LATITUDE_MIN meshparams.LATITUDE_MAX] /scaling, ...
@@ -72,12 +72,56 @@ imagesc([meshparams.LONGITUDE_MIN meshparams.LONGITUDE_MAX] / scaling, ...
 axis xy
 axis tight
 axis equal
-colorbar(gca)
+cb = colorbar(gca);
+set(cb, 'TickDirection', 'out')
+if scaling == 1
+    set(get(cb, 'Label'), 'String', 'elevation (m)')
+elseif scaling == 1000
+    set(get(cb, 'Label'), 'String', 'elevation (km)')
+else
+    set(get(cb, 'Label'), 'String', sprintf('elevation (x%g m)', scaling))
+end
 colormap(kelicol)
+grid on
+hold on
+% draw the cross-ection line
+if ~strcmpi(direction, 'longitudinal')
+    if isempty(ii_plot)
+        ii_plot = ceil((meshparams.NEX_XI+1)/2);
+    end
+    x = (meshparams.LONGITUDE_MIN + (ii_plot-1) / meshparams.NEX_XI * ...
+        (meshparams.LONGITUDE_MAX - meshparams.LONGITUDE_MIN)) * [1 1];
+    x = x / scaling;
+    y = [meshparams.LATITUDE_MIN meshparams.LATITUDE_MAX];
+    y = y / scaling;
+    plot(x, y, 'Color', 'k', 'LineWidth', 1)
+else
+    if isempty(ii_plot)
+        ii_plot = ceil((meshparams.NEX_ETA+1)/2);
+    end
+    x = [meshparams.LONGITUDE_MIN meshparams.LONGITUDE_MAX];
+    x = x / scaling;
+    y = (meshparams.LATITUDE_MIN + (ii_plot-1) / meshparams.NEX_ETA * ...
+        (meshparams.LATITUDE_MAX - meshparams.LATITUDE_MIN)) * [1 1];
+    y = y / scaling;
+    plot(x, y, 'Color', 'k', 'LineWidth', 1)
+end
+if scaling == 1
+    xlabel('longitudinal (m)')
+    ylabel('transverse (m)')
+elseif scaling == 1000
+    xlabel('longitudinal (km)')
+    ylabel('transverse (km)')
+else
+    xlabel(sprintf('longitudinal (x%g m)', scaling))
+    ylabel(sprintf('transverse (x%g m)', scaling))
+end
+title('elevation map')
 set(gca, 'Box', 'on', 'TickDir', 'out', 'FontSize', 12)
 
 subplot('Position', [0.58 0.08 0.38 0.84])
 hold on
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % TODO: roatate the mesh horizontally so that the longitudinal direction 
 % points to the right
 if mod(fkmodel.baz, 360) == 0
@@ -91,6 +135,7 @@ elseif mod(fkmodel.baz, 360) == 180
     % rotate 270 degrees counter clockwise
 
 end
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 if ~strcmpi(direction, 'longitudinal')
     x = linspace(meshparams.LATITUDE_MIN, meshparams.LATITUDE_MAX, ...
@@ -128,8 +173,18 @@ if ~strcmpi(direction, 'longitudinal')
         plot(pgons{ii}, 'FaceColor', 'none', 'LineWidth', 1, ...
                 'EdgeColor', 'k', 'FaceAlpha', 1)
     end
+
+    if scaling == 1
+        xlabel('transverse (m)')
+        ylabel('elevation (m)')
+    elseif scaling == 1000
+        xlabel('transverse (km)')
+        ylabel('elevation (km)')
+    else
+        xlabel(sprintf('transverse (x%g m)', scaling))
+        ylabel(sprintf('elevation (x%g m)', scaling))
+    end
 else
-    % TODO: Implement
     x = linspace(meshparams.LONGITUDE_MIN, meshparams.LONGITUDE_MAX, ...
         meshparams.NEX_XI+1) / scaling;
     if isempty(ii_plot)
@@ -165,8 +220,19 @@ else
         plot(pgons{ii}, 'FaceColor', 'none', 'LineWidth', 1, ...
                 'EdgeColor', 'k', 'FaceAlpha', 1)
     end
-end
 
+    if scaling == 1
+        xlabel('longitudinal (m)')
+        ylabel('elevation (m)')
+    elseif scaling == 1000
+        xlabel('longitudinal (km)')
+        ylabel('elevation (km)')
+    else
+        xlabel(sprintf('longitudinal (x%g m)', scaling))
+        ylabel(sprintf('elevation (x%g m)', scaling))
+    end
+end
+title('cross section')
 set(gca, 'TickDir', 'out', 'Box', 'on', 'FontSize', 12, ...
     'XLim', [x(1) x(end)], 'YLim', [-height 0], 'DataAspectRatio', [1 1 1])
 set(gcf, 'Renderer', 'painters')
