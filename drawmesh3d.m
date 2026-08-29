@@ -1,11 +1,15 @@
 function drawmesh3d(ddir, direction, ii_plot, scaling)
-% DRAWMESH3D(ddir, direction)
+% DRAWMESH3D(ddir, direction, ii_plot, scaling)
 %
 % Draw the cross-section of a SPECFEM3D simulation
 %
 % INPUT:
 % ddir          directory to a FK-SPECFEM3D run
 % direction     'longitudinal' (west->east) or 'transverse' (south->north)
+% ii_plot       index of the grid of the cross section
+%               [default: [] which is the middle of the grid
+% scaling       the number to divide plotted values (e.g. 1 for meters,
+%               1000 for kilometers) [default: 1]
 %
 % SEE ALSO:
 % DRAWBACKGROUND (for SPECFEM2D simulation)
