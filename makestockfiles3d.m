@@ -11,7 +11,7 @@ function stockdir = makestockfiles3d(runmode)
 %                          variance, smoothness, correlation length, and
 %                          the number of iterations
 %
-% Last modified by sirawich-at-princeton.edu, 06/09/2025
+% Last modified by sirawich-at-princeton.edu, 10/06/2026
 
 defval('runmode', 'default')
 
@@ -186,9 +186,9 @@ for ii = 1:size(size_box, 1)
                 end
                 % materials: must consistent with layers in fkmodel
                 meshparams3d = makemeshparams3d;
-                meshparams3d.LATITUDE_MIN  = -size_box(ii, 1) / 2;
-                meshparams3d.LATITUDE_MAX  =  size_box(ii, 1) / 2;
-                meshparams3d.LONGITUDE_MIN = -size_box(ii, 2) / 2;
+                meshparams3d.LATITUDE_MIN  = -size_box(ii, 2) / 2;
+                meshparams3d.LATITUDE_MAX  =  size_box(ii, 2) / 2;
+                meshparams3d.LONGITUDE_MIN = -size_box(ii, 1) / 2;
                 meshparams3d.LONGITUDE_MAX =  size_box(ii, 1) / 2;
                 meshparams3d.DEPTH_BLOCK_KM = size_box(ii, 3) / 1000;
                 
@@ -349,7 +349,7 @@ for kk = 1:length(model_name)
                             sprintf(['interf_SIZE-%s_ELEM-%d_MODEL' ...
                             '-%s_%02d.dat'], size_box_name{ii}, ...
                             size_elem(jj, 1), model_name{kk}, ii_itfs)), ...
-                        'Z', ones(NXI,NETA) * fkmodel.layers{mm}.ztop ...
+                        'Z', ones(NETA,NXI) * fkmodel.layers{mm}.ztop ...
                         );
                 end
                 layers(ii_itfs) = meshparams3d.REGIONS{mm}.NZ_END - ...
@@ -374,7 +374,7 @@ if strcmp(runmode, 'default')
     s2 = [100 1000 10000 100000];
     nu = [0.5 1.0 1.5];
     rho = [1000 2000 4000 8000];
-    it = 1:100;
+    it = 1:10;
 elseif strcmp(runmode, 'notopo')
     return
 elseif isnumeric(runmode) && length(runmode) == 4
