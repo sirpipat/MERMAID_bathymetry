@@ -10,7 +10,7 @@ function remesh3d(ddir, dx, dz)
 % [dz1 dz2 dz3 ...] element size in z direction for each layer from top to
 %                   bottom
 %
-% Last modified by spipatprathanporn@ucsd.edu, 07/06/2026
+% Last modified by spipatprathanporn@ucsd.edu, 10/06/2026
 
 defval('ddir', [])
 defval('dx', [])
@@ -143,7 +143,7 @@ if ~isempty(dx)
     % determine the number of elements in y (ETA/latitude) direction
     NEX_ETA = ceil(lat_width / dx);
     if lat_width / NEX_ETA < dxmin
-        fprintf('Rounding up NXI resulted dx < dxmin. Rounding down\n');
+        fprintf('Rounding up NETA resulted dx < dxmin. Rounding down\n');
         NEX_ETA = NEX_ETA - 1;
         if lat_width / NEX_ETA > dxmax
             fprintf('Rounding down NEX_ETA resulted dx > dxmax.\n');
@@ -196,7 +196,7 @@ if ~isempty(dz)
                 itfs_str.Z{ii}, xxnew, yynew);
         end
     end
-    itfs_str.ZBOT = [itfs_str.Z(2:end); ones(NEX_XI+1, NEX_ETA+1) * ...
+    itfs_str.ZBOT = [itfs_str.Z(2:end); ones(NEX_ETA+1, NEX_XI+1) * ...
         -height];
     itfs_str.NZ = nan(size(itfs_str.Z));
     fprintf('Recommended NZ for each layer: min - (use) - max\n')
