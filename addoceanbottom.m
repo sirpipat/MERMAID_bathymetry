@@ -15,7 +15,7 @@ function addoceanbottom(ddir, topo, z0, taper)
 %               default.
 % taper         whether to taper to z0 elevation or not
 %
-% Last modified by sirawich-at-princeton.edu, 03/09/2026
+% Last modified by sirawich-at-princeton.edu, 10/06/2026
 
 fkmodel = loadfkmodel(fullfile(ddir, 'DATA', 'FKMODEL'));
 
@@ -42,10 +42,10 @@ end
 
 size_xi = itfs{end}.SPACING_XI;
 size_eta = itfs{end}.SPACING_ETA;
-spacing_xi = size_xi / (size(topo,1) - 1);
-spacing_eta = size_eta / (size(topo,2) - 1);
-itfs{end-1}.NXI = size(topo, 1);
-itfs{end-1}.NETA = size(topo, 2);
+spacing_xi = size_xi / (size(topo,2) - 1);
+spacing_eta = size_eta / (size(topo,1) - 1);
+itfs{end-1}.NXI = size(topo, 2);
+itfs{end-1}.NETA = size(topo, 1);
 itfs{end-1}.SPACING_XI = spacing_xi;
 itfs{end-1}.SPACING_ETA = spacing_eta;
 itfs{end-1}.Z = topo;
@@ -56,8 +56,8 @@ for ii = (length(layers)-2):-1:1
     layer_thickness = elev(ii+1) - elev(ii);
     min_layer_thickness = 0.6 * layer_thickness;
     if min(itfs{ii+1}.Z, [], 'all') - elev(ii) <= min_layer_thickness
-        itfs{ii}.NXI = size(topo, 1);
-        itfs{ii}.NETA = size(topo, 2);
+        itfs{ii}.NXI = size(topo, 2);
+        itfs{ii}.NETA = size(topo, 1);
         itfs{ii}.SPACING_XI = spacing_xi;
         itfs{ii}.SPACING_ETA = spacing_eta;
         itfs{ii}.Z = min(itfs{ii+1}.Z - min_layer_thickness, ...
