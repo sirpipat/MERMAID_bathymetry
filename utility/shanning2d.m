@@ -1,12 +1,12 @@
 function w = shanning2d(n, r, shape, sac)
-% w = SHANNING2D([nx ny], r, shape, sac)
+% w = SHANNING2D([ny nx], r, shape, sac)
 %
 % Calculates 2D Hanning windows of a certain length and a certain width
 % fraction the exact way SAC says it is doing it...
 %
 % INPUT:
 %
-% [nx ny]       The required length of the window
+% [ny nx]       The required length of the window
 % r             The fraction of the window that is tapered [default 0.5]
 % shape         shape of the window
 %               0 Use rectangular window [default]
@@ -21,7 +21,7 @@ function w = shanning2d(n, r, shape, sac)
 % SEE ALSO:
 % SHANNING
 %
-% Last modified by sirawich-at-princeton.edu, 06/25/2025
+% Last modified by sirawich-at-princeton.edu, 10/06/2026
 
 defval('r',0.5)
 defval('shape', 0)
@@ -31,8 +31,8 @@ if length(n) == 1
     nx = n;
     ny = n;
 else
-    nx = n(1);
-    ny = n(2);
+    nx = n(2);
+    ny = n(1);
 end
 
 
@@ -40,7 +40,7 @@ wx = shanning(nx, r, sac);
 wy = shanning(ny, r, sac);
 
 if shape == 0
-    w = wy .* wx';
+    w = wx' .* wy;
 else
     % construct the radius on a grid
     x = linspace(-nx+1, nx-1, nx)';
