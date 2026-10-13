@@ -19,7 +19,7 @@ function varargout = taperbathymetry(z, r)
 % taperbathymetry('demo', 2)
 % taperbathymetry('demo', 3)
 %
-% Last modified by sirawich@princeton.edu, 03/06/2026
+% Last modified by sirawich@princeton.edu, 10/06/2026
 
 
 if strcmp(z, 'demo')
@@ -199,8 +199,8 @@ if r > 0.5
 end
 
 % size of the box
-Nx = size(z, 1);
-Ny = size(z, 2);
+Nx = size(z, 2);
+Ny = size(z, 1);
 
 % width of tapered region
 Wtx = round(r * Nx);
@@ -208,29 +208,29 @@ Wty = round(r * Ny);
 
 % determine the median of the edge of the non-tapered region
 % the corner points are not double counted
-zedge = [z(1+Wtx, 1+Wty:Ny-Wty)'; ...
-         z(Nx-Wtx, 1+Wty:Ny-Wty)'; ...
-         z(2+Nx:Nx-Wtx-1, 1+Wty); ...
-         z(2+Nx:Nx-Wtx-1, Ny-Wty)];
+zedge = [z(1+Wty:Ny-Wty, 1+Wtx); ...
+         z(1+Wty:Ny-Wty, Nx-Wtx); ...
+         z(1+Wty, 2+Nx:Nx-Wtx-1)'; ...
+         z(Ny-Wty, 2+Nx:Nx-Wtx-1)'];
 z0 = median(zedge);
 
 % flatten the topography in the tapered region
 zflat = z;
 for ii = 1:Wtx
-    zflat(ii,:) = zflat(Wtx+1,:);
+    zflat(:,ii) = zflat(:,Wtx+1);
 end
 for ii = Nx-Wtx+1:Nx
-    zflat(ii,:) = zflat(Nx-Wtx,:);
+    zflat(:,ii) = zflat(:,Nx-Wtx);
 end
 for ii = 1:Wty
-    zflat(:,ii) = zflat(:,Wty+1);
+    zflat(ii,:) = zflat(Wty+1,:);
 end
 for ii = Ny-Wty+1:Ny
-    zflat(:,ii) = zflat(:,Ny-Wty);
+    zflat(ii,:) = zflat(Ny-Wty,:);
 end
     
 % 2D cosine taper
-w = shanning2d([Nx Ny], r);
+w = shanning2d([Ny Nx], r);
 
 % tapering
 ztapered = w .* (zflat - z0) + z0;
