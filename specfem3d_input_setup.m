@@ -12,16 +12,16 @@ function specfem3d_input_setup(ddir, depth, topo, inject, solver, with2d)
 % - type          'flat' [default] or
 %                 'randomfield' (two-dimensional Matern covariance field)
 % - depth         mean depth [Default: -4000]
+% - dydx          sampling interval in the y and x directions [m m]
+%                 [Default: [500 500]]
+% - NyNx          number of samples in the y and x directions
+%                 [Default: [57 57]]
 % +++ ONLY FOR topo.type == 'randomfield' +++
 % - s2            the first Matern parameter, aka sigma^2, in field units^2
 %                 [Default: 100]
 % - nu            the second Matern parameter [Default: 0.5]
 % - rho           the third Matern parameter, in the units of the grid
 %                 [Default: 1000]
-% - dydx          sampling interval in the y and x directions [m m]
-%                 [Default: [500 500]]
-% - NyNx          number of samples in the y and x directions
-%                 [Default: [57 57]]
 % - blurs         0 No wavenumber blurring
 %                 1 No wavenumber blurring, effectively
 %                 N Fejer convolutional  BLUROS  on an N-times refined grid
@@ -49,7 +49,7 @@ function specfem3d_input_setup(ddir, depth, topo, inject, solver, with2d)
 % SEE ALSO:
 % SPECFEM3D_INPUT_SETUP_FLAT, SIMULOSL
 %
-% Last modified by sirawich-at-princeton.edu: 03/08/2026
+% Last modified by sirawich-at-princeton.edu: 10/13/2026
 
 % default parameters
 defstruct('topo', 'type', 'flat')
@@ -214,13 +214,13 @@ fkmodel.nlayers = 2;
 layer1 = struct('rho', 1020, 'vp', 1500, 'vs', 0, 'ztop', 0);
 layer2 = struct('rho', 2500, 'vp', 3400, 'vs', 1963, 'ztop', topo.depth);
 fkmodel.layers = {layer1; layer2};
-fkmodel.baz = 180; % fixed for now
+fkmodel.baz = 270; % fixed for now
 fkmodel.theta = inject.theta;
 fkmodel.fmax = inject.freq;
 fkmodel.fs = inject.fs;
 fkmodel.twindow = params.NSTEP * params.DT;
 fkmodel.origin_time = inject.origin_time;
-fkmodel.origin_wavefront = [0 -14000 -10000];
+fkmodel.origin_wavefront = [0 -topo.NyNx(2)*topo.dydx(2)/2 -10000];
 if strcmp(inject.type, 'Gaussian')
     fkmodel.stf_type = 1;
     fkmodel.stf_file = "n/a";
