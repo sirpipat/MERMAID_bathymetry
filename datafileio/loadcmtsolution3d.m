@@ -1,10 +1,13 @@
 function cmt = loadcmtsolution3d(fname)
 % cmt = LOADCMTSOLUTION3D(fname)
+% cmt = LOADCMTSOLUTION3D(ddir)
 %
 % Loads a CMTSOLUTION file of SPECFEM3D_Cartesian.
 %
 % INPUT
 % fname         name of the CMTSOLUTION file
+% ddir          directory the FK-SPECFEM3D run where the file is
+%               ddir/DATA/CMTSOLUTION
 %
 % OUTPUT
 % cmt           CMT solutions, array of struct(s) with following fields
@@ -41,12 +44,18 @@ function cmt = loadcmtsolution3d(fname)
 % SEE ALSO:
 % LOADSOURCE, MAKECMTSOLUTION3D, WRITECMTSOLUTION3D
 %
-% Last modified by sirawich-at-princeton.edu, 09/25/2024
+% Last modified by sirawich-at-princeton.edu, 10/13/2026
 
 cmt = {};
 num_sources = 0;
 
 fid = fopen(fname, 'r');
+if fid == -1
+    fprintf('It is not a file name. Assume it is a directory:\n');
+    fname = fullfile(fname, 'DATA', 'CMTSOLUTION');
+    fprintf('Read from %s\n', fname);
+    fid = fopen(fname, 'r');
+end
 line = fgetl(fid);
 
 while ~isempty(line)

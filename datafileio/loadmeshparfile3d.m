@@ -1,10 +1,13 @@
 function meshparams = loadmeshparfile3d(fname)
 % meshparams = LOADMESHPARFILE3D(fname)
+% meshparams = LOADMESHPARFILE3D(ddir)
 %
 % Reads mesh parameters from a Mesh_Par_file of SPECFEM3D_Cartesian.
 %
 % INPUT:
 % fname             name of a Mesh_Par_file
+% ddir              directory the FK-SPECFEM3D run where the Mesh par file
+%                   is: ddir/DATA/meshfem3D_files/Mesh_Par_file
 %
 % OUTPUT:
 % meshparams        mesh parameters
@@ -12,10 +15,17 @@ function meshparams = loadmeshparfile3d(fname)
 % SEE ALSO:
 % MAKEMESHPARAMS3D, WRITEMESHPARFILE3D, LOADPARFILE3D
 %
-% Last modified by sirawich-at-princeton.edu, 09/18/2024
+% Last modified by sirawich-at-princeton.edu, 10/13/2026
 
 % open the file
 fid = fopen(fname, 'r');
+if fid == -1
+    fprintf('It is not a file name. Assume it is a directory:\n');
+    fprintf('Read from %s\n', ...
+        fullfile(fname, 'DATA', 'meshfem3D_files', 'Mesh_Par_file'))
+    fid = fopen(fullfile(fname, 'DATA', 'meshfem3D_files', ...
+        'Mesh_Par_file'), 'r');
+end
 
 names = {};
 values = {};

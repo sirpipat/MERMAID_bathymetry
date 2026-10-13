@@ -1,5 +1,6 @@
 function [itfs, layers] = loadinterfacefiles3d(fname, plt)
 % [itfs, layers] = LOADINTERFACEFILES3D(fname, plt)
+% [itfs, layers] = LOADINTERFACEFILES3D(ddir, plt)
 %
 % Reads interfaces from an interface file and other accompanied files for a
 % SPECFEM3D_Cartesian simulation. Please make sure that other accompanied
@@ -10,6 +11,8 @@ function [itfs, layers] = loadinterfacefiles3d(fname, plt)
 %
 % INPUT:
 % fname         name of the interface file
+% ddir          directory the FK-SPECFEM3D run where the file is
+%               according to Mesh Par file
 % plt           whether to show examples of plots (how to plot)
 %               0   - no plot [default]
 %               n>0 - plot n-th interfaces from the top
@@ -30,14 +33,22 @@ function [itfs, layers] = loadinterfacefiles3d(fname, plt)
 % SEE ALSO:
 % MAKEINTERFACES3D, WRITEINTERFACEFILES3D, LOADINTERFACEFILES3D_DEMO
 %
-% Last modified by sirawich-at-princeton.edu, 07/13/2026
+% Last modified by sirawich-at-princeton.edu, 10/13/2026
 
 defval('plt', 0)
 
-ddir = strcat(fileparts(fname), filesep);
-
 %% open the file
 fid = fopen(fname, 'r');
+if fid == -1
+    fprintf('It is not a file name. Assume it is a directory:\n');
+    meshparams = loadmeshparfile3d(fname);
+    fname = fullfile(fname, 'DATA', 'meshfem3D_files', ...
+        meshparams.INTERFACES_FILE);
+    fprintf('Read from %s\n', fname);
+    fid = fopen(fname, 'r');
+end
+ddir = strcat(fileparts(fname), filesep);
+
 line = strip(fgetl(fid));
 % skip comments / headers
 while isempty(line) || strcmp(line(1), '#')

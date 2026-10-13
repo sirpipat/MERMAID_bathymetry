@@ -1,5 +1,6 @@
 function fkmodel = loadfkmodel(fname)
 % fkmodel = LOADFKMODEL(fname)
+% fkmodel = LOADFKMODEL(ddir)
 %
 % Loads a FKMODEL file of SPECFEM3D_Cartesian.
 %
@@ -8,6 +9,8 @@ function fkmodel = loadfkmodel(fname)
 %
 % INPUT:
 % fname         name of the FKMODEL file
+% ddir          directory the FK-SPECFEM3D run where the FKMODEL file is
+%               ddir/DATA/FKMODEL
 %
 % OUTPUT:
 % fkmodel       struct containing elastic properties of the media in
@@ -16,12 +19,18 @@ function fkmodel = loadfkmodel(fname)
 % SEE ALSO:
 % MAKEFKMODEL, WRITEFKMODEL
 %
-% Last modified by sirawich-at-princeton.edu, 08/19/2026
+% Last modified by sirawich-at-princeton.edu, 10/13/2026
 
 % set default values
 fkmodel = makefkmodel;
 
 fid = fopen(fname, 'r');
+if fid == -1
+    fprintf('It is not a file name. Assume it is a directory\n');
+    params = loadparfile3d(fullfile(fname, 'DATA', 'Par_file'));
+    fprintf('Read from %s\n', fullfile(fname, params.FKMODEL_FILE));
+    fid = fopen(fullfile(fname, params.FKMODEL_FILE), 'r');
+end
 while true
     line = fgetl(fid);
     % skip comments

@@ -19,7 +19,17 @@ function stations = loadstations3d(fname)
 % SEE ALSO:
 % READSTATIONS3D, WRITESTATIONS3D, MAKESTATIONS3D, READ_STATIONS
 %
-% Last modified by Sirawich Pipatprathanporn, 07/29/2026
+% Last modified by Sirawich Pipatprathanporn, 10/13/2026
+
+% verify input
+fid = fopen(fname, 'r');
+if fid == -1
+    fprintf('It is not a file name. Assume it is a directory:\n');
+    fname = fullfile(fname, 'DATA', 'STATIONS');
+    fprintf('Read from %s\n', fname);
+    fid = fopen(fname, 'r');
+end
+fclose(fid);
 
 % read the station file as a table
 opts = detectImportOptions(fname, 'FileType', 'text');

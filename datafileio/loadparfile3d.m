@@ -1,5 +1,6 @@
 function params = loadparfile3d(fname)
 % params = LOADPARFILE3D(fname)
+% params = LOADPARFILE3D(ddir)
 %
 % Reads parameters from a Par_file of SPECFEM3D_Cartesian.
 %
@@ -9,6 +10,8 @@ function params = loadparfile3d(fname)
 %
 % INPUT:
 % fname         name of the Par_file
+% ddir          directory the FK-SPECFEM3D run where the par file file is
+%               ddir/DATA/Par_file
 %
 % OUTPUT:
 % params        parameters
@@ -16,14 +19,19 @@ function params = loadparfile3d(fname)
 % SEE ALSO:
 % WRITEPARFILE, MAKEPARAMS
 %
-% Last modified by Sirawich Pipatprathanporn, 06/28/2025
+% Last modified by Sirawich Pipatprathanporn, 10/13/2026
 
 names  = {};
 values = {};
 numvar = 0;
 
 fid = fopen(fname, 'r');
-
+if fid == -1
+    fprintf('It is not a file name. Assume it is a directory:\n');
+    fprintf('Read from %s\n', ...
+        fullfile(fname, 'DATA', 'Par_file'))
+    fid = fopen(fullfile(fname, 'DATA', 'Par_file'), 'r');
+end
 line = fgetl(fid);
 while ischar(line)
     % skip comments / headers
