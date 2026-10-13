@@ -17,7 +17,7 @@ function varargout = setboxsize(ddir, boxsize, elemsize)
 % SEE ALSO:
 % SPECFEM3D_INPUT_SETUP, SPECFEM3D_INPUT_SETUP_FLAT
 %
-% Last modified by sirawich-at-princeton.edu, 08/19/2026
+% Last modified by sirawich-at-princeton.edu, 10/13/2026
 
 % what to change
 % v meshparams.LATITUDE_MIN/MAX
@@ -65,21 +65,28 @@ if elemsize(3) <= 0
     elemsize(3) = (meshparams.DEPTH_BLOCK_KM * 1000) / sum(layers);
 end
 
-% Round the number of elements to be 8 times the multiple of the number of 
-% processors and adjust the element size accordingly.
-% See https://specfem3d.readthedocs.io/en/latest/03_mesh_generation
+% Round the number of elements
 nex_xi_exact = boxsize(1) / elemsize(1);
-nex_xi_round = round(nex_xi_exact / (8 * meshparams.NPROC_XI)) * ...
-    (8 * meshparams.NPROC_XI);
-elemsize(1) = boxsize(1) / nex_xi_round;
-
 nex_eta_exact = boxsize(2) / elemsize(2);
-nex_eta_round = round(nex_eta_exact / (8 * meshparams.NPROC_ETA)) * ...
-    (8 * meshparams.NPROC_ETA);
-elemsize(2) = boxsize(2) / nex_eta_round;
-
 nez_exact = boxsize(3) / elemsize(3);
+
+% If the mesh is not regular or contain mesh doublings, round the number of
+% elements to be 8 times the multiple of the number of processors and 
+% adjust the element size accordingly.
+% See https://specfem3d.readthedocs.io/en/latest/03_mesh_generation
+if ~meshparams.USE_REGULAR_MESH || meshparams.NDOUBLINGS > 0
+    nex_xi_round = round(nex_xi_exact / (8 * meshparams.NPROC_XI)) * ...
+        (8 * meshparams.NPROC_XI);
+    nex_eta_round = round(nex_eta_exact / (8 * meshparams.NPROC_ETA)) * ...
+        (8 * meshparams.NPROC_ETA);
+else
+    nex_xi_round = round(nex_xi_exact);
+    nex_eta_round = round(nex_eta_exact);
+end
 nez_round = round(nez_exact);
+
+elemsize(1) = boxsize(1) / nex_xi_round;
+elemsize(2) = boxsize(2) / nex_eta_round;
 elemsize(3) = boxsize(3) / nez_round;
 
 numelems = [nex_xi_round nex_eta_round nez_round];
