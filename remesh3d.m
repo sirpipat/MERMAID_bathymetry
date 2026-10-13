@@ -10,7 +10,7 @@ function remesh3d(ddir, dx, dz)
 % [dz1 dz2 dz3 ...] element size in z direction for each layer from top to
 %                   bottom
 %
-% Last modified by spipatprathanporn@ucsd.edu, 10/06/2026
+% Last modified by spipatprathanporn@ucsd.edu, 10/13/2026
 
 defval('ddir', [])
 defval('dx', [])
@@ -233,7 +233,7 @@ for ii = meshparams.NREGIONS:-1:1
             meshparams.REGIONS{ii+1}.NZ_END + 1;
     end
     meshparams.REGIONS{ii}.NZ_END = meshparams.REGIONS{ii}.NZ_BEGIN + ...
-        layers(ii);
+        itfs_str.NZ(ii) - 1;
 end
 
 % write the mesh parameter and interface to the file
