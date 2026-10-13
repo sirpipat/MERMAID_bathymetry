@@ -14,7 +14,7 @@ function drawmesh3d(ddir, direction, ii_plot, scaling)
 % SEE ALSO:
 % DRAWBACKGROUND (for SPECFEM2D simulation)
 %
-% Last modified by spipatprathanporn@ucsd.edu, 08/30/2026
+% Last modified by spipatprathanporn@ucsd.edu, 10/13/2026
 
 defval('direction', 'longitudinal')
 defval('ii_plot', [])
@@ -140,6 +140,10 @@ elseif mod(fkmodel.baz, 360) == 180
 
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+if length(itfs_str.NZ) < 4
+    COLORS = COLORS([1 3 4],:);
+end
 
 if ~strcmpi(direction, 'longitudinal')
     x = linspace(meshparams.LATITUDE_MIN, meshparams.LATITUDE_MAX, ...
