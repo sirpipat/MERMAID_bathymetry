@@ -13,18 +13,36 @@ function addoceanbottom(ddir, topo, z0, taper)
 % z0            mean elevation of the topography if topo has zero mean. If
 %               z0 is empty, it will use elevation from FKMODEL file by
 %               default.
-% taper         whether to taper to z0 elevation or not
+% taper         struct with a following field
+% - method          how to taper to z0 elevation or not
+%       []                  no taper. Assume topo has been tapererd
+%       'shanning'          2D Hanning window
+%       'taperbathymetry'   use TAPERBATHYMETRY [default]
+% - r               the fraction of the window that is tapered 
+%                   [default: 0.25]
 %
-% Last modified by sirawich-at-princeton.edu, 10/06/2026
+% SEE ALSO:
+% SHANNING2D, TAPERBATHYMETRY
+%
+% Last modified by sirawich-at-princeton.edu, 10/29/2026
 
 fkmodel = loadfkmodel(fullfile(ddir, 'DATA', 'FKMODEL'));
 
 defval('z0', fkmodel.layers{2}.ztop)
+defval('taper', struct('method', 'taperbathymetry', 'r', 0.25))
+if ~isfield(taper, 'method')
+    taper.method = 'taperbathymetry';
+end
+if ~isfield(taper, 'r') || isempty(taper.r)
+    taper.r = 0.25;
+end
 
 % process elevation
-if taper
-    wn = shanning2d(size(topo), 0.15, 0, 0);
+if strcmpi(taper.method, 'shanning')
+    wn = shanning2d(size(topo), r, 0, 0);
     topo = topo .* wn;
+elseif strcmpi(taper.method, 'taperbathymetry')
+    topo = taperedbathymetry(topo, r);
 end
 
 % add mean elevation
