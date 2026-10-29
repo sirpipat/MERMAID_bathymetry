@@ -14,7 +14,7 @@ function [dx, dy, dzs] = getelementsize(ddir)
 %               ...
 %               dzs(end)    = bottom layer
 %
-% Last modified by spipatprathanporn@ucsd.edu, 10/18/2026
+% Last modified by spipatprathanporn@ucsd.edu, 10/29/2026
 
 % determine the file names and read parameters
 parfile = fullfile(ddir, 'DATA', 'Par_file');
