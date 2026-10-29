@@ -1,5 +1,5 @@
 function setsedimentlayer(ddir, thick, rho, vp, vs, isadding)
-% SETSEDIMENTLAYER(ddir, thickness, density, isadding)
+% SETSEDIMENTLAYER(ddir, thick, rho, vp, vs, isadding)
 %
 % Set or add the sediment layer to a FK-SPECFEM3D run.
 %
@@ -12,7 +12,7 @@ function setsedimentlayer(ddir, thick, rho, vp, vs, isadding)
 % isadding      whether to add a sediment layer instead of modify the
 %               existing sediment layer in the model [default: false]
 %
-% Last modified by spipatprathanporn@ucsd.edu, 07/06/2026
+% Last modified by spipatprathanporn@ucsd.edu, 10/29/2026
 
 defval('thick', [])
 defval('rho', [])
