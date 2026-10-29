@@ -5,7 +5,7 @@ function drawmesh3d(ddir, direction, ii_plot, scaling)
 %
 % INPUT:
 % ddir          directory to a FK-SPECFEM3D run
-% direction     'longitudinal' (west->east) or 'transverse' (south->north)
+% direction     'radial' (west->east) or 'transverse' (south->north)
 % ii_plot       index of the grid of the cross section
 %               [default: [] which is the middle of the grid
 % scaling       the number to divide plotted values (e.g. 1 for meters,
@@ -14,9 +14,9 @@ function drawmesh3d(ddir, direction, ii_plot, scaling)
 % SEE ALSO:
 % DRAWBACKGROUND (for SPECFEM2D simulation)
 %
-% Last modified by spipatprathanporn@ucsd.edu, 10/13/2026
+% Last modified by spipatprathanporn@ucsd.edu, 10/29/2026
 
-defval('direction', 'longitudinal')
+defval('direction', 'radial')
 defval('ii_plot', [])
 defval('scaling', 1)
 
@@ -89,7 +89,7 @@ colormap(kelicol)
 grid on
 hold on
 % draw the cross-ection line
-if ~strcmpi(direction, 'longitudinal')
+if ~strcmpi(direction, 'radial')
     if isempty(ii_plot)
         ii_plot = ceil((meshparams.NEX_XI+1)/2);
     end
@@ -111,13 +111,13 @@ else
     plot(x, y, 'Color', 'k', 'LineWidth', 1)
 end
 if scaling == 1
-    xlabel('longitudinal (m)')
+    xlabel('radial (m)')
     ylabel('transverse (m)')
 elseif scaling == 1000
-    xlabel('longitudinal (km)')
+    xlabel('radial (km)')
     ylabel('transverse (km)')
 else
-    xlabel(sprintf('longitudinal (x%g m)', scaling))
+    xlabel(sprintf('radial (x%g m)', scaling))
     ylabel(sprintf('transverse (x%g m)', scaling))
 end
 title('elevation map')
@@ -126,7 +126,7 @@ set(gca, 'Box', 'on', 'TickDir', 'out', 'FontSize', 12)
 subplot('Position', [0.58 0.08 0.38 0.84])
 hold on
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% TODO: roatate the mesh horizontally so that the longitudinal direction 
+% TODO: roatate the mesh horizontally so that the radial direction 
 % points to the right
 if mod(fkmodel.baz, 360) == 0
     % rotate 90 degrees counter clockwise
@@ -145,7 +145,7 @@ if length(itfs_str.NZ) < 4
     COLORS = COLORS([1 3 4],:);
 end
 
-if ~strcmpi(direction, 'longitudinal')
+if ~strcmpi(direction, 'radial')
     x = linspace(meshparams.LATITUDE_MIN, meshparams.LATITUDE_MAX, ...
         meshparams.NEX_ETA+1)' / scaling;
     if isempty(ii_plot)
@@ -230,13 +230,13 @@ else
     end
 
     if scaling == 1
-        xlabel('longitudinal (m)')
+        xlabel('radial (m)')
         ylabel('elevation (m)')
     elseif scaling == 1000
-        xlabel('longitudinal (km)')
+        xlabel('radial (km)')
         ylabel('elevation (km)')
     else
-        xlabel(sprintf('longitudinal (x%g m)', scaling))
+        xlabel(sprintf('radial (x%g m)', scaling))
         ylabel(sprintf('elevation (x%g m)', scaling))
     end
 end
