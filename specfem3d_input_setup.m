@@ -49,7 +49,7 @@ function specfem3d_input_setup(ddir, depth, topo, inject, solver, with2d)
 % SEE ALSO:
 % SPECFEM3D_INPUT_SETUP_FLAT, SIMULOSL
 %
-% Last modified by sirawich-at-princeton.edu: 10/13/2026
+% Last modified by sirawich-at-princeton.edu: 10/19/2026
 
 % default parameters
 defstruct('topo', 'type', 'flat')
@@ -102,9 +102,9 @@ elseif strcmp(topo.type, 'randomfield')
     bath(9:NETA-8, 9:NXI-8) = bath(9:NETA-8, 9:NXI-8) + Hxy;
     
 elseif strcmp(topo.type, 'bathymetry')
-    defstruct('topo', 'dydx', [500 500])
-    defstruct('topo', 'NyNx', [57 57])
-    defstruct('topo', 'shanning', [0.15 0.15])
+    defstruct('topo', 'dydx', [200 200])
+    defstruct('topo', 'NyNx', [121 121])
+    defstruct('topo', 'shanning', [0.25 0.25])
     defstruct('topo', 'lon', -168.38)
     defstruct('topo', 'lat', -12.00)
     defstruct('topo', 'baz', 266.2356)
@@ -119,7 +119,7 @@ elseif strcmp(topo.type, 'bathymetry')
     % rotate counter clockwise 90 degrees
     % zz from bathymetryprofile2d, the wave enters from the left while
     % zz for this setup, the wave enters from the bottom
-    zz = rot90(zz);
+    % zz = rot90(zz);
     
     % mean depth
     topo.depth = mean(zz, 'all');
@@ -220,7 +220,7 @@ fkmodel.fmax = inject.freq;
 fkmodel.fs = inject.fs;
 fkmodel.twindow = params.NSTEP * params.DT;
 fkmodel.origin_time = inject.origin_time;
-fkmodel.origin_wavefront = [0 -topo.NyNx(2)*topo.dydx(2)/2 -10000];
+fkmodel.origin_wavefront = [0 -(topo.NyNx(2)-1)*topo.dydx(2)/2 -10000];
 if strcmp(inject.type, 'Gaussian')
     fkmodel.stf_type = 1;
     fkmodel.stf_file = "n/a";
