@@ -2,7 +2,8 @@ function remesh3d(ddir, dx, dz)
 % REMESH3D(ddir, dx, [dz1 dz2 dz3 ...])
 %
 % Updates the element size in each layer. You may leave dx or dz blank if
-% you wish not to change them.
+% you wish not to change them. It assumes the mesh has the same layers as 
+% the outside layers assumed by FKMODEL file.
 %
 % INPUTS:
 % ddir              directory to a FK-SPECFEM3D run
@@ -10,7 +11,7 @@ function remesh3d(ddir, dx, dz)
 % [dz1 dz2 dz3 ...] element size in z direction for each layer from top to
 %                   bottom
 %
-% Last modified by spipatprathanporn@ucsd.edu, 10/13/2026
+% Last modified by spipatprathanporn@ucsd.edu, 10/19/2026
 
 defval('ddir', [])
 defval('dx', [])
