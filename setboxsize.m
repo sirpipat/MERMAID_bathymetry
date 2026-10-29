@@ -17,7 +17,7 @@ function varargout = setboxsize(ddir, boxsize, elemsize)
 % SEE ALSO:
 % SPECFEM3D_INPUT_SETUP, SPECFEM3D_INPUT_SETUP_FLAT
 %
-% Last modified by sirawich-at-princeton.edu, 10/13/2026
+% Last modified by sirawich-at-princeton.edu, 10/29/2026
 
 % what to change
 % v meshparams.LATITUDE_MIN/MAX
@@ -130,9 +130,8 @@ meshparams.NEX_ETA        =  nex_eta_round;
 layers(1) = round((boxsize(3) + fkmodel.layers{fkmodel.nlayers}.ztop) / ...
     elemsize(3));
 for ii = 2:fkmodel.nlayers
-    layers(ii) = round((boxsize(3) + ...
-        fkmodel.layers{fkmodel.nlayers+1-ii}.ztop) / elemsize(3)) - ...
-        layers(ii-1);
+    layers(ii) = round((fkmodel.layers{fkmodel.nlayers+1-ii}.ztop - ...
+        fkmodel.layers{fkmodel.nlayers+2-ii}.ztop) / elemsize(3));
 end
 
 % update the begin/end of element number in x, y, and z directions
