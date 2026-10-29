@@ -1,5 +1,5 @@
 function stations = makestations3d(s)
-% stations = MAKESTATIONS           % makes an example of generic structure
+% stations = MAKESTATIONS3D         % makes an example of generic structure
 % stations = MAKESTATIONS3D(s)
 %
 % Makes a struct of stations for SPECFEM3D cartesian.
@@ -29,7 +29,7 @@ function stations = makestations3d(s)
 % SEE ALSO:
 % LOADSTATIONS3D, WRITESTATIONS3D, READSTATIONS3D
 %
-% Last modified by spipatprathanporn@ucsd.edu, 07/29/2026
+% Last modified by spipatprathanporn@ucsd.edu, 10/29/2026
 
 % Example: fluid-solid simulation with an OBS and a hydrophone float
 if nargin == 0
