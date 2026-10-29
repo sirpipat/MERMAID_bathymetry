@@ -20,7 +20,7 @@ function fkmodel = makefkmodel(model, varargin)
 % SEE ALSO:
 % LOADFKMODEL, WRITEFKMODEL
 %
-% Last modified by sirawich-at-princeton.edu, 05/29/2025
+% Last modified by sirawich-at-princeton.edu, 10/29/2026
 
 defval('model', 'PS2024')
 
@@ -48,7 +48,7 @@ if isstring(model) || ischar(model)
             fkmodel.nlayers = 4;
             rho  = [1020  1820  2850   3330];
             vp   = [1500  1750  6500   8080];
-            vs   = [   0   340  3700   4490];
+            vs   = [   0   540  3700   4490];
             ztop = [   0 -4400 -4650 -11370];
         case 'crust1'
             fkmodel.nlayers = 6;
@@ -108,7 +108,7 @@ end
 fkmodel.wave = 'p';
 
 % angle of incoming wave
-fkmodel.baz = 180;
+fkmodel.baz = 270;
 fkmodel.theta = 0;
 
 % frequency max
