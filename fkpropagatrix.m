@@ -27,6 +27,9 @@ function varargout = fkpropagatrix(layers, p, x0, x1, stf, tipe, fmax)
 % - Tzz             vertical, normal traction
 % - p               hydrostatic stress
 % layers        layers struct with additional information
+%
+% SEE ALSO:
+% % FLUIDSOLIDARRIVALS, LAYERARRIVALS
 % 
 % Last modified by spipatprathanporn@ucsd.edu, 11/18/2026
 
