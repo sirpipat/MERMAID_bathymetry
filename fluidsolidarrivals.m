@@ -29,7 +29,7 @@ function [t, x, z, ph] = fluidsolidarrivals(z_interface, z_station, rho_f, vp_f,
 % % run a demo
 % fluidsolidarrivals('demo');
 %
-% Last modified by sirawich-at-princeton.edu 04/03/2025
+% Last modified by sirawich-at-princeton.edu 11/18/2026
 
 %% demos
 if ischar(z_interface) && strcmp(z_interface, 'demo')
@@ -101,7 +101,7 @@ D_S2F_T    = D_S2F(3);   % transimitted acoustic
 D_FREE_R   = -1;
 
 % fluid to solid
-[~, D_F2S] = fluidsolidcoefficients(rho_f, vp_f, rho_s, vp_s, vs_s, theta_f);
+[~, D_F2S] = fluidsolidcoefficients3(rho_f, vp_f, rho_s, vp_s, vs_s, theta_f);
 D_F2S_R    = D_F2S(1);   % reflected acoustic
 D_F2S_TP   = D_F2S(2);   % transmitted P
 D_F2S_TSV  = D_F2S(3);   % transmitted SV
